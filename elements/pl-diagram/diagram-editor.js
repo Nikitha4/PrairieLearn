@@ -122,7 +122,7 @@ DiagramEditor.prototype.setWaiting = function (waiting) {
 DiagramEditor.prototype.setActive = function (active) {
 	if (active) {
 		this.previousOverflow = document.body.style.overflow;
-		document.body.style.overflow = 'hidden';
+		document.body.style.overflow = 'auto';
 	}
 	else {
 		document.body.style.overflow = this.previousOverflow;
@@ -228,10 +228,12 @@ DiagramEditor.prototype.handleMessage = function (msg) {
 		}
 	}
 	else if (msg.event == 'load') {
-		console.log("Loaded " + msg.xml)
+		// console.log("Loaded " + msg.xml)
+		console.log("Loaded")
 		parseDiagram(msg.xml, false);
 	}
 	else if (msg.event == "event") {
+		console.log("Event")
 		console.error(msg.error)
 	}
 	if (msg.event == 'exit') {

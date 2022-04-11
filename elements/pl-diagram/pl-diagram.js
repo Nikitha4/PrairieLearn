@@ -15,6 +15,7 @@ function setDictList(dict, dictKey, listIdx, value, isNode) {
 
 /** Parse encoded XML diagram returned by draw.io */
 function parseDiagram(data, needDecode = true) {
+    console.log("Parsing diagram...")
     var responseRoot = stringToXML(data);
     if (!responseRoot) {
         console.error("Error parsing response XML");

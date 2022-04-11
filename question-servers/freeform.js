@@ -535,6 +535,7 @@ module.exports = {
                 /* We'll be sneaky and remove the extensions, since they're not used elsewhere */
                 delete data.extensions;
                 delete ret_val.extensions;
+                console.log("console len: ", consoleLog.length > 0)
                 if (_.isString(consoleLog) && consoleLog.length > 0) {
                     const courseIssue = new Error(`${elementFile}: output logged on console during ${phase}()`);
                     courseIssue.data = { outputBoth: consoleLog };
