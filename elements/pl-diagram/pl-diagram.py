@@ -21,7 +21,7 @@ element_defaults = {
 
 def labelFromTransition(i):
     # TODO: Generate transition label "i+j'" from index of transition array
-    return "label here"
+    return "(0+1)*"
 
 
 def parseInitialFSMToXML(element):
@@ -43,7 +43,7 @@ def parseInitialFSMToXML(element):
             raise Exception('Invalid output for pl-fsm')
     max_transitions = 2**len(outputs)
 
-    outputTag = ",".join([a + "=?" for a in outputs])
+    outputTag = ",".join([a + "=1" for a in outputs])
     
     # Begin xml file
     mxFile = Element('mxfile')
