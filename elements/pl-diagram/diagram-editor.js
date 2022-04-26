@@ -9,6 +9,7 @@ function DiagramEditor() {
 	var self = this;
 
 	this.handleMessageEvent = function (evt) {
+		console.log("handling message event, diagram editor.js")
 		if (self.frame != null && evt.source == self.frame.contentWindow &&
 			evt.data.length > 0) {
 			try {
@@ -178,13 +179,16 @@ DiagramEditor.prototype.getFrameStyle = function () {
  * Returns the URL for the iframe.
  */
 DiagramEditor.prototype.getFrameUrl = function () {
-	var url = this.drawDomain + '?proto=json&spin=1&embed=1';
-
+	var url = this.drawDomain + '?proto=json'
+	
+	url += '&spin=1'; // Adds spinning / loading image
+	url += '&embed=1'; 
 	url += "&hide-pages=1"; //Disable format
 	url += '&ui=min';
 	url += '&libraries=1';
-	url += "&saveAndExit=0&noSaveBtn=1&noExitBtn=1"; // Disable save and exit buttons
+	url += "&saveAndExit=0&noSaveBtn=1&noExitBtn=1"; // Hide all buttons in embed mode, disable save and exit buttons
 	url += '&libs=;'
+	url += '&keepmodified=1'; 							// Keeps the changes modified after saving
 	if (this.config != null) {
 		url += '&configure=1';
 	}

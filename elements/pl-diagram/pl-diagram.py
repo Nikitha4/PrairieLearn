@@ -58,9 +58,7 @@ def parseInitialFSMToXML(element):
     nodeDict = {}  # {nodeName->id}
 
     for pl_state_element in element:
-        print("inside for loop for pl state")
         if pl_state_element.tag == "pl-fsm-state":
-            print("in pl fsm state")
             stateName = pl.get_string_attrib(pl_state_element, 'name', None)
             stateTransitions = pl.get_string_attrib(pl_state_element, 'transitions', None)
             x1 = pl.get_integer_attrib(pl_state_element, 'x1', None)
@@ -71,8 +69,9 @@ def parseInitialFSMToXML(element):
                 stateTransitions = literal_eval(stateTransitions)
             # if node doesn't exist, add it to dictionary
             if stateName not in nodeDict:
-                nodeDict[stateName] = str(id)
                 id += 1
+                nodeDict[stateName] = str(id)
+                
             # Create node in XML
             nodeID = nodeDict[stateName]
             # Create node container
@@ -84,10 +83,14 @@ def parseInitialFSMToXML(element):
                 "parent": "1",
             })
             nodeGeometry = SubElement(nodeCell, 'mxGeometry', {"x": str(x1), "y": str(y1), "width": "90", "height": "120", "as": "geometry"})
+
             # Create node circle
-            nodeObject = SubElement(root, 'object', {"elemType": "node", "id": str(id), 'label': outputTag})
+            # nodeObject = SubElement(root, 'object', {"elemType": "node", "id": str(id), 'label': outputTag})
             id += 1
-            nodeCell = SubElement(nodeObject, 'mxCell', {
+            nodeCell = SubElement(root, 'mxCell', {
+                "elemType": "node", 
+                "id": str(id), 
+                'label': outputTag,
                 "style": "ellipse;color=#FFC0CB;strokeColor=#FFC0CB;whiteSpace=wrap;html=1;aspect=fixed;fontStyle=0;connectable=0;allowArrows=0;resizable=0;rotatable=0;cloneable=0;deletable=0;movable=0;noLabel=0;editable=1;dropTarget=0;container=0;expand=0;",
                 "vertex": "1",
                 "connectable": "0",
@@ -96,9 +99,12 @@ def parseInitialFSMToXML(element):
             nodeGeometry = SubElement(nodeCell, 'mxGeometry', {"width": "90", "height": "90", "as": "geometry"})
 
             # Create node label
-            nodeObject = SubElement(root, 'object', {"label": stateName, "elemType": "nodeLabel", "id": str(id)})
+            # nodeObject = SubElement(root, 'object', {"label": stateName, "elemType": "nodeLabel", "id": str(id)})
             id += 1
-            nodeCell = SubElement(nodeObject, 'mxCell', {
+            nodeCell = SubElement(root, 'mxCell', {
+                "label": stateName, 
+                "elemType": "nodeLabel", 
+                "id": str(id),
                 "style": "text;html=1;color=#FFC0CB;strokeColor=#FFC0CB;background-color=#e83e8c;align=center;verticalAlign=middle;rounded=0;fontSize=11;allowArrows=0;connectable=0;deletable=0;cloneable=0;rotatable=0;movable=0;resizable=0;pointerEvents=0;",
                 "vertex": "1",
                 "connectable": "0",
@@ -106,48 +112,75 @@ def parseInitialFSMToXML(element):
             })
             nodeGeometry = SubElement(nodeCell, 'mxGeometry', {"x": "25", "y": "100", "width": "40", "height": "20", "as": "geometry"})
 
+            print("after random modifications")
+            # Create node circle
+            # nodeObject = SubElement(root, 'object', {"elemType": "node", "id": str(id), 'label': outputTag})
+            # id += 1
+            # nodeCell = SubElement(nodeObject, 'mxCell', {
+            #     "style": "ellipse;color=#FFC0CB;strokeColor=#FFC0CB;whiteSpace=wrap;html=1;aspect=fixed;fontStyle=0;connectable=0;allowArrows=0;resizable=0;rotatable=0;cloneable=0;deletable=0;movable=0;noLabel=0;editable=1;dropTarget=0;container=0;expand=0;",
+            #     "vertex": "1",
+            #     "connectable": "0",
+            #     "parent": nodeID,
+            # })
+            # nodeGeometry = SubElement(nodeCell, 'mxGeometry', {"width": "90", "height": "90", "as": "geometry"})
+
+            # # Create node label
+            # nodeObject = SubElement(root, 'object', {"label": stateName, "elemType": "nodeLabel", "id": str(id)})
+            # id += 1
+            # nodeCell = SubElement(nodeObject, 'mxCell', {
+            #     "style": "text;html=1;color=#FFC0CB;strokeColor=#FFC0CB;background-color=#e83e8c;align=center;verticalAlign=middle;rounded=0;fontSize=11;allowArrows=0;connectable=0;deletable=0;cloneable=0;rotatable=0;movable=0;resizable=0;pointerEvents=0;",
+            #     "vertex": "1",
+            #     "connectable": "0",
+            #     "parent": nodeID,
+            # })
+            # nodeGeometry = SubElement(nodeCell, 'mxGeometry', {"x": "25", "y": "100", "width": "40", "height": "20", "as": "geometry"})
+
             # iterate edges
-            for i in range(max_transitions):
-                dest = stateTransitions[i]
-                if(dest == ""):
-                    continue
-                if dest not in nodeDict:
-                    nodeDict[dest] = str(id)
-                    id += 1
-                # Add edge
-                edgeObject = SubElement(root, 'object', {"elemType": "edge", "id": str(id)})
-                id += 1
-                edgeCell = SubElement(edgeObject, 'mxCell', {
-                    "style": "endArrow=classic;html=1;fontStyle=0;fontSize=11;editable=0;cloneable=0;deletable=1;",
-                    "edge": "1",
-                    "parent": "1",
-                    "source": nodeDict[stateName],
-                    "target": nodeDict[dest]
-                })
-                edgeGeometry = SubElement(edgeCell, 'mxGeometry', {"width": "50", "height": "50", "relative": "1", "as": "geometry"})
-                # Add edge label
-                edgeObject = SubElement(root, 'object', {"label": labelFromTransition(i), "elemType": "edgeLabel", "id": str(id)})
-                id += 1
-                edgeCell = SubElement(edgeObject, 'mxCell', {
-                    "style": "edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;movable=0;pointerEvents=1;deletable=0;cloneable=0;rotatable=0;allowArrows=0;",
-                    "vertex": "1",
-                    "connectable": "0",
-                    "parent": str(id - 2),
-                })
-                edgeGeometry = SubElement(edgeCell, 'mxGeometry', {"x": "0.1201", "relative": "1", "as": "geometry"})
-                # Handle self loop
-                if dest == stateName:
-                    # TODO: Handle self loops
-                    pass
+            # for i in range(max_transitions):
+            #     dest = stateTransitions[i]
+            #     if(dest == ""):
+            #         continue
+            #     if dest not in nodeDict:
+            #         nodeDict[dest] = str(id)
+            #         id += 1
+            #     # Add edge
+            #     edgeObject = SubElement(root, 'object', {"elemType": "edge", "id": str(id)})
+            #     id += 1
+            #     edgeCell = SubElement(edgeObject, 'mxCell', {
+            #         "style": "endArrow=classic;html=1;fontStyle=0;fontSize=11;editable=0;cloneable=0;deletable=1;",
+            #         "edge": "1",
+            #         "parent": "1",
+            #         "source": nodeDict[stateName],
+            #         "target": nodeDict[dest]
+            #     })
+            #     edgeGeometry = SubElement(edgeCell, 'mxGeometry', {"width": "50", "height": "50", "relative": "1", "as": "geometry"})
+            #     # Add edge label
+            #     edgeObject = SubElement(root, 'object', {"label": labelFromTransition(i), "elemType": "edgeLabel", "id": str(id)})
+            #     id += 1
+            #     edgeCell = SubElement(edgeObject, 'mxCell', {
+            #         "style": "edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;movable=0;pointerEvents=1;deletable=0;cloneable=0;rotatable=0;allowArrows=0;",
+            #         "vertex": "1",
+            #         "connectable": "0",
+            #         "parent": str(id - 2),
+            #     })
+            #     edgeGeometry = SubElement(edgeCell, 'mxGeometry', {"x": "0.1201", "relative": "1", "as": "geometry"})
+            #     # Handle self loop
+            #     if dest == stateName:
+            #         # TODO: Handle self loops
+            #         pass
+    print(ElementTree.tostring(mxFile, 'utf-8'))
     return ElementTree.tostring(mxFile, 'utf-8')
 
 
 def parseAnswerFSMFromXML(element):
     """Parse answer FSM from <pl-fsm/> into an adjacency list structure"""
     graph = {"edges": {}, "nodes": {}}
+
+    # Error handling 
     inputs = pl.get_string_attrib(element, 'input', None)
     outputs = pl.get_string_attrib(element, 'output', None)
     startState = pl.get_string_attrib(element, 'start', None)
+
     if inputs is None or outputs is None:
         raise Exception('input and output are required in pl-fsm')
     if startState is None:
@@ -207,7 +240,6 @@ def prepare(element_html, data):
 
 
 def render(element_html, data):
-    print("inside render")
     element = lxml.html.fragment_fromstring(element_html)
     name = pl.get_string_attrib(element, 'answers-name', element_defaults['answers-name'])
     html_params = {"name": name, "initial-xml": data['params']['initial-xml']}
@@ -240,10 +272,6 @@ def grade(element_html, data):
     outputAlphabet = reference['outputs']
     inputAlphabet = reference['inputs']
 
-    # Syntax check node outputs
-    print("after awfew")
-    print("student", student)
-
     # Output indices should be a letter in the alphabet
     outputIndices = {k: v for v, k in enumerate(outputAlphabet)}
     for node in student['nodes']:
@@ -251,7 +279,6 @@ def grade(element_html, data):
         if node not in student['edges']:
             data['format_errors'][name] = f"Node has no outgoing edges: {student['nodes'][node][0]}"
             return data
-        print("thing that has whitespace", student['nodes'][node][1], len(student['nodes'][node][1]))
         
         nodeStr = re.sub(r'[ \r\n]|(\<br\>)', '', student['nodes'][node][1])  # Strip whitespace
         print("nodestr", nodeStr, len(nodeStr))
