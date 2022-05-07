@@ -147,7 +147,7 @@ def parseInitialFSMToXML(element):
                     # TODO: Handle self loops
                     pass
     
-    # Prints the entire tree for debugging and returns 
+    # Prints the entire tree for debugging and returns p
     print(ElementTree.tostring(mxFile, 'utf-8'))
     return ElementTree.tostring(mxFile, 'utf-8')
 
